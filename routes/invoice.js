@@ -11,12 +11,26 @@ const client = new btcpay.BTCPayClient('https://lightning.filipmartinsson.com', 
 
 /* get & verify invoice. */
 router.get('/:id', async function(req, res, next) {
-
+	var invoiceId = req.params.id;
+	client.get_invoice(invoiceId)
+		.then(invoice => {
+			if(invoice.status == "complete" || invoice.status == "paid"){
+				res.end("<html>Thank you</html>");
+			} else {
+				res.end("<html>Not paid</html>");
+			}
+		}).catch(err => console.leog(err));
 });
 
 /* Create invoice. */
 router.post('/', function(req, res, next) {
-
+	var dollarAmount = req.body.amount;
+	client.create_invoice({ price: dollarAmount, currency: "USD" })
+		.then(function(){
+			console.log(invoice);
+			res.render("invoice", { invoiceId: invoice.id });
+		})
+		.catch(error => console.log(error));
 });
 
 

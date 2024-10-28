@@ -1,1 +1,10 @@
 script(src="https://lightning.filipmartinsson.com/modal/btcpay.js")
+script(type='text/javascript').
+	window.onLoad = function(){
+		var id = "#{invoiceId}"
+		window.btcpay.showInvoice(id);
+
+		window.onModalWillLeave(function(){
+			window.location.href = "invoice/" + id;
+		})
+	}

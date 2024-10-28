@@ -1,0 +1,10 @@
+h1=message
+p This is payment service
+div
+	h2 Submit Payments
+	form(method='post', action='/invoice')
+		p
+			label Amount
+			input(type='number', name='amount')
+		p
+			input(type='submit', name='submit')
