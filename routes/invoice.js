@@ -6,7 +6,10 @@ const BTCPAY_MERCHANT_KEY = "";
 // Initialize the client
 const btcpay = require('btcpay')
 const keypair = btcpay.crypto.load_keypair(new Buffer.from(BTCPAY_PRIV_KEY, 'hex'));
-const client = new btcpay.BTCPayClient('https://lightning.filipmartinsson.com', keypair, {merchant: BTCPAY_MERCHANT_KEY})
+const client = new btcpay.BTCPayClient(
+  'https://lightning.filipmartinsson.com', 
+  keypair, { merchant: BTCPAY_MERCHANT_KEY }
+);
 
 
 /* get & verify invoice. */
@@ -23,15 +26,23 @@ router.get('/:id', async function(req, res, next) {
 });
 
 /* Create invoice. */
+// POST -> /invoice
 router.post('/', function(req, res, next) {
 	var dollarAmount = req.body.amount;
-	client.create_invoice({ price: dollarAmount, currency: "USD" })
-		.then(function(){
+	client.create_invoice({ 
+    price: dollarAmount, 
+    currency: "USD", 
+    notificationURL: "https://mydomain.com/webhook"
+  }).then(function(){
 			console.log(invoice);
-			res.render("invoice", { invoiceId: invoice.id });
+			res.render("loading", { invoiceId: invoice.id });
 		})
 		.catch(error => console.log(error));
 });
 
+// POST -> /invoice/webhook
+router.post('/webhook', function(req, res, next){
+  // deliver product
+});
 
 module.exports = router;
